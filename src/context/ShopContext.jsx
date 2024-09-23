@@ -13,8 +13,8 @@ const ShopContextProvider = (props) => {
 
     const addToCart = async (itemId, size) => {
         let cartData = structuredClone(cartItem);
-
-        if (size) {
+    
+        if (size) {            
             if (cartData[itemId]) {
                 if (cartData[itemId][size]) {
                     cartData[itemId][size] += 1;
@@ -30,22 +30,55 @@ const ShopContextProvider = (props) => {
 
         }else{
             toast.error("Select Product Size");  
-        }
-
-
-
+        }       
         setCartItem(cartData)
     }
 
-    useEffect(() => {
-        console.log(cartItem);
+    const getCartCount = () => {
+        let totalCount = 0;        
+        for(const items in cartItem){
+            for(const item in cartItem[items]){
+                try {
+                    if(cartItem[items][item] > 0){
+                        totalCount += cartItem[items][item]
+                    }
+                } catch (error) {
+                    
+                }
+            }
+        }
+        return totalCount;
+    }
 
-    }, [cartItem])
+    const updateQuantity = async (itemId, size, quantity) => {
+        let cartData = structuredClone(cartItem);
+        cartData[itemId][size] = quantity;
+        setCartItem(cartData)
+    } 
+
+    const getCartAmount = async () => {
+        let totalAmount = 0;
+        for(const items in cartItem){
+            let itemInfo = products.find((product) => product._id === items)
+            for(const item in cartItem[items]){
+                try {
+                    if(cartItem[items][item] > 0){
+                        totalAmount += itemInfo.price * cartItem[items][item]
+                    }
+                } catch (error) {
+                    
+                }
+            }
+        }
+        return totalAmount;
+    }
+
+
 
     const value = {
         products, currency, delivery_fee,
         search, setSearch, showSearch, setShowSearch,
-        cartItem, addToCart
+        cartItem, addToCart, getCartCount, updateQuantity, getCartAmount
     }
 
     return (
