@@ -25,6 +25,9 @@ const Product = () => {
     fetchProductData();
   }, [productId, products])
 
+  console.log(productData);
+  
+
   return productData ? (
     <div className='border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100'>
       {/* Product Data  */}
