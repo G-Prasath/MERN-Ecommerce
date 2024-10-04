@@ -21,8 +21,11 @@ const Login = () => {
           password,
         });
         if (response.data.success) {
-          setToken(response.data.token);
-          localStorage.setItem("token", response.data.token);
+            setName('');
+            setEmail('');
+            setPassword('');
+            setCurrentState('Login');
+            toast.success("Sign In Success")
         } else {
           toast.error(response.data.message);
         }
