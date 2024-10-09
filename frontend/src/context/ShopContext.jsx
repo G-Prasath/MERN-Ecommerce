@@ -124,8 +124,6 @@ const ShopContextProvider = (props) => {
         }
     }
 
-    
-
     useEffect(() => {
         getProductData();
     },[])       

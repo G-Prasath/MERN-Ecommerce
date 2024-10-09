@@ -7,7 +7,7 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 
 const PlaceOrder = () => {
-  const [method, setMethod] = useState('cod');
+  const [method, setMethod] = useState('COD');
   const {navigate, backendUrl, token, cartItem, setCartItem, getCartAmount, delivery_fee, products} = useContext(ShopContext);
 
   const [formData, setFormData] = useState({
@@ -22,6 +22,7 @@ const PlaceOrder = () => {
     phone: ''
   })
 
+
   const onChangeHandler = (e) => {
     const name = e.target.name
     const value = e.target.value
@@ -32,11 +33,11 @@ const PlaceOrder = () => {
     e.preventDefault()
     try {
       let orderItems = []
+
       for(const items in cartItem){
         for(const item in  cartItem[items]){
           if(cartItem[items][item] > 0){
-            const itemInfo = structuredClone(products.find(products.find(product => product._id === item)))
-            console.log(itemInfo);
+            const itemInfo = structuredClone(products.find(product => product._id === items))
             if(itemInfo){
               itemInfo.size = item
               itemInfo.quantity = cartItem[items][item]
@@ -53,21 +54,27 @@ const PlaceOrder = () => {
         amount : getCartAmount() + delivery_fee
       }
 
+            
       switch(method){
         // API Call for COD
-        case 'COD':
+        case 'COD':          
           const response = await axios.post(backendUrl + "/api/order/place", orderData, {headers: {token}});
+          console.log(response.data);
+        
           if(response.data.success){
             setCartItem({})
             navigate("/orders")
           }else{
             toast.error(response.data.message)
           }
-
-
+          default:
+            break;
       }
-    } catch (error) {
+
       
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message)
     }
   }
   return (
@@ -112,7 +119,7 @@ const PlaceOrder = () => {
               <img src={assets.razorpay_logo} className='h-5 mx-4' alt="Payment Logo" />
             </div>
             <div onClick={() => setMethod('cod')} className="flex items-center gap-3 border p-2 px-3 cursor-pointer">
-              <p className={`min-w-3.5 h-3.5 border rounded-full ${method === 'cod' ? 'bg-green-400' : ''}`}></p>
+              <p className={`min-w-3.5 h-3.5 border rounded-full ${method === 'COD' ? 'bg-green-400' : ''}`}></p>
               <p className='uppercase text-gray-500 text-sm font-medium mx-4'>Cash On Delivery</p>
             </div>
           </div>
