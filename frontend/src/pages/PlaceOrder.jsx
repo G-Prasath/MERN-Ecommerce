@@ -32,7 +32,7 @@ const PlaceOrder = () => {
   const onSubmitHandler = async (e) => {
     e.preventDefault()
     try {
-      let orderItems = []
+      let orderItems = [];      
 
       for(const items in cartItem){
         for(const item in  cartItem[items]){
@@ -48,13 +48,13 @@ const PlaceOrder = () => {
         }
 
       }
+
       let orderData = {
         address : formData,
         items : orderItems,
         amount : getCartAmount() + delivery_fee
       }
 
-            
       switch(method){
         // API Call for COD
         case 'COD':          
@@ -69,9 +69,19 @@ const PlaceOrder = () => {
           }
           default:
             break;
+
+
+        case 'stripe':
+          const responseStripe = await axios.post(backendUrl+"/api/order/stripe", orderData, {headers: {token}});
+          
+          if(responseStripe.data.success){          
+            const {session_url} = responseStripe.data
+            window.open(session_url, "_blank")
+          }else{
+            toast.error(responseStripe.message)
+          }
       }
 
-      
     } catch (error) {
       console.log(error);
       toast.error(error.message)
