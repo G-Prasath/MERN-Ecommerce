@@ -29,7 +29,8 @@ app.use('/api/order', orderRouter);
 
 
 app.get('/', (req, res)  => {
-    res.send('API IS WORKING')
+    console.log("API IS WORKING");
+    res.send('API IS WORKING');
 })
 
 app.listen(port, () => console.log('Server Stared at : ' + port))
